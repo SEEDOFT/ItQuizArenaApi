@@ -3,11 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[Table('ranks', key: 'id', keyType: 'int')]
 #[Fillable(['title', 'required_xp', 'icon'])]
 class Rank extends Model
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [

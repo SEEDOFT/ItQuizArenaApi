@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('quiz_answers', key: 'id', keyType: 'int')]
 #[Fillable(['quiz_session_id', 'question_id', 'selected_option', 'is_correct', 'time_spent'])]
 class QuizAnswer extends Model
 {

@@ -10,10 +10,6 @@ class QuestionSeeder extends Seeder
 {
     public function run(): void
     {
-        $programming = Course::where('category', 'Programming')->first();
-        $networking = Course::where('category', 'Networking')->first();
-        $database = Course::where('category', 'Database')->first();
-
         $programmingQuestions = [
             ['What does HTML stand for?', ['Hyper Text Markup Language', 'High Tech Modern Language', 'Home Tool Markup Language', 'Hyper Transfer Markup Language'], 0, 'HTML is the standard markup language for creating web pages.'],
             ['Which data structure uses FIFO (First In, First Out)?', ['Stack', 'Queue', 'Array', 'Tree'], 1, 'A queue operates on FIFO principle, like a line of people.'],
@@ -85,7 +81,7 @@ class QuestionSeeder extends Seeder
 
         foreach ($programmingQuestions as $q) {
             Question::create([
-                'course_id' => $programming->id,
+                'course_id' => Course::PROGRAMMING,
                 'question_text' => $q[0],
                 'options' => $q[1],
                 'correct_answer' => $q[2],
@@ -96,7 +92,7 @@ class QuestionSeeder extends Seeder
 
         foreach ($networkingQuestions as $q) {
             Question::create([
-                'course_id' => $networking->id,
+                'course_id' => Course::NETWORKING,
                 'question_text' => $q[0],
                 'options' => $q[1],
                 'correct_answer' => $q[2],
@@ -107,7 +103,7 @@ class QuestionSeeder extends Seeder
 
         foreach ($databaseQuestions as $q) {
             Question::create([
-                'course_id' => $database->id,
+                'course_id' => Course::DATABASE,
                 'question_text' => $q[0],
                 'options' => $q[1],
                 'correct_answer' => $q[2],

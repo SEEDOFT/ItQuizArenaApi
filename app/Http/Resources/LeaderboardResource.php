@@ -15,6 +15,7 @@ class LeaderboardResource extends JsonResource
             'level' => $this->level,
             'rank' => $this->current_rank?->title,
             'total_quizzes' => $this->total_quizzes,
+            'avatar' => $this->avatar,
         ];
     }
 }

@@ -11,20 +11,22 @@ class QuizService
 {
     public function selectQuestions(Course $course, int $count = 10, ?string $difficulty = null): Collection
     {
-        $query = $course->questions();
-
         if ($difficulty !== null) {
-            $query->where('difficulty', $difficulty);
+            $filtered = $course->questions()->where('difficulty', $difficulty);
+            $totalFiltered = $filtered->count();
+
+            if ($totalFiltered > 0) {
+                $selected = $filtered->inRandomOrder()->take(min($count, $totalFiltered))->get();
+
+                return $this->interleaveByDifficulty($selected);
+            }
         }
 
-        $totalQuestions = $query->count();
-        $count = min($count, $totalQuestions);
+        $all = $course->questions();
+        $totalAll = $all->count();
+        $selected = $all->inRandomOrder()->take(min($count, $totalAll))->get();
 
-        $questions = $query->inRandomOrder()->take($count)->get();
-
-        return $questions->isEmpty()
-            ? $questions
-            : $this->interleaveByDifficulty($questions);
+        return $selected;
     }
 
     private function interleaveByDifficulty(Collection $questions): Collection

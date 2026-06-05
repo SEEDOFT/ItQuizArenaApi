@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Table('quiz_sessions', key: 'id', keyType: 'int')]
 #[Fillable([
     'user_id',
     'course_id',
@@ -21,6 +24,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class QuizSession extends Model
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [

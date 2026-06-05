@@ -71,7 +71,12 @@ class AuthController extends Controller
 
             $googleUser = $response->json();
 
-            if (($googleUser['aud'] ?? '') !== config('services.google.client_id')) {
+            $allowedAudiences = array_filter([
+                config('services.google.client_id'),
+                config('services.google.ios_client_id'),
+            ]);
+
+            if (! in_array($googleUser['aud'] ?? '', $allowedAudiences)) {
                 return $this->error('Invalid Google token', 401);
             }
         } catch (Exception $e) {

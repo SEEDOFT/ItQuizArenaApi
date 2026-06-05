@@ -3,13 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['course_id', 'question_text', 'options', 'correct_answer', 'explanation', 'points', 'difficulty'])]
+#[Table('questions', key: 'id', keyType: 'int')]
+#[Fillable([
+    'course_id',
+    'question_text',
+    'options',
+    'correct_answer',
+    'explanation',
+    'points',
+    'difficulty',
+])]
 class Question extends Model
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [

@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('user_achievements', key: 'id', keyType: 'int')]
 #[Fillable(['user_id', 'achievement_id', 'progress', 'unlocked_at'])]
 class UserAchievement extends Model
 {

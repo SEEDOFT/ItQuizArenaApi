@@ -3,12 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['title', 'description', 'category', 'difficulty', 'question_count', 'thumbnail', 'is_active'])]
+#[Table('courses', key: 'id', keyType: 'int')]
+#[Fillable(['id', 'title', 'description', 'category', 'difficulty', 'question_count', 'thumbnail', 'is_active'])]
 class Course extends Model
 {
+    use HasFactory;
+
+    public const int PROGRAMMING = 1;
+
+    public const int NETWORKING = 1;
+
+    public const int DATABASE = 1;
+
     protected function casts(): array
     {
         return [

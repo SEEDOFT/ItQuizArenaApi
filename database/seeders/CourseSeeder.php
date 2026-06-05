@@ -10,6 +10,7 @@ class CourseSeeder extends Seeder
     public function run(): void
     {
         Course::create([
+            'id' => Course::PROGRAMMING,
             'title' => 'Programming Fundamentals',
             'description' => 'Test your knowledge of programming languages, algorithms, and data structures.',
             'category' => 'Programming',
@@ -18,6 +19,7 @@ class CourseSeeder extends Seeder
         ]);
 
         Course::create([
+            'id' => Course::NETWORKING,
             'title' => 'Networking Basics',
             'description' => 'Explore the world of computer networks, protocols, and topologies.',
             'category' => 'Networking',
@@ -26,6 +28,7 @@ class CourseSeeder extends Seeder
         ]);
 
         Course::create([
+            'id' => Course::DATABASE,
             'title' => 'Database Systems',
             'description' => 'Challenge yourself with SQL, NoSQL, normalization, and database design concepts.',
             'category' => 'Database',

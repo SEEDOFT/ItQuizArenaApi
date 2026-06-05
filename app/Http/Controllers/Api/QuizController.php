@@ -48,7 +48,7 @@ class QuizController extends Controller
         ]);
 
         return $this->success([
-            'session' => new QuizSessionResource($session),
+            'session' => new QuizSessionResource($session->load('course')),
             'questions' => QuestionResource::collection($questions),
         ], 'Quiz started');
     }

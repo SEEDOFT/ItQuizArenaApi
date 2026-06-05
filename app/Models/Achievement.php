@@ -3,12 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[Table('achievements', key: 'id', keyType: 'int')]
 #[Fillable(['title', 'description', 'key', 'required_value', 'icon'])]
 class Achievement extends Model
 {
+    use HasFactory;
+
     protected function casts(): array
     {
         return [
