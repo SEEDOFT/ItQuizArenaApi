@@ -14,7 +14,7 @@ class CourseFactory extends Factory
         return [
             'title' => fake()->sentence(3),
             'description' => fake()->paragraph(),
-            'category' => fake()->randomElement(['Programming', 'Networking', 'Database', 'Cyber Security', 'Web Development', 'Cloud & DevOps']),
+            'category' => fake()->randomElement(['Programming', 'Networking', 'Database', 'Web Development', 'Cloud & DevOps']),
             'difficulty' => fake()->randomElement(['Beginner', 'Intermediate', 'Advanced']),
             'question_count' => fake()->numberBetween(5, 50),
             'is_active' => true,
