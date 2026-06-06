@@ -34,7 +34,7 @@ class QuizController extends Controller
 
         $difficulty = $validatedData['difficulty'] ?? $user->settings?->difficulty;
 
-        $questions = $this->quizService->selectQuestions($course, $count, $difficulty);
+        $questions = $this->quizService->selectQuestions($course, $count, $difficulty, $user->id);
 
         if ($questions->isEmpty()) {
             return $this->error('No questions available for this course', 400);

@@ -4,29 +4,73 @@ namespace App\Services;
 
 use App\Models\Course;
 use App\Models\Question;
+use App\Models\QuizAnswer;
 use App\Models\QuizSession;
 use Illuminate\Support\Collection;
 
 class QuizService
 {
-    public function selectQuestions(Course $course, int $count = 10, ?string $difficulty = null): Collection
+    public function selectQuestions(Course $course, int $count = 10, ?string $difficulty = null, ?int $userId = null): Collection
     {
+        $baseQuery = $course->questions();
+
         if ($difficulty !== null) {
-            $filtered = $course->questions()->where('difficulty', $difficulty);
-            $totalFiltered = $filtered->count();
+            $filtered = (clone $baseQuery)->where('difficulty', $difficulty);
+            $hasMatches = (clone $filtered)->count() > 0;
 
-            if ($totalFiltered > 0) {
-                $selected = $filtered->inRandomOrder()->take(min($count, $totalFiltered))->get();
-
-                return $this->interleaveByDifficulty($selected);
+            if (! $hasMatches) {
+                return $this->applySeenFilter(clone $baseQuery, $course, $userId)
+                    ->inRandomOrder()
+                    ->take($count)
+                    ->get();
             }
+
+            return $this->interleaveByDifficulty(
+                $this->applySeenFilter(clone $filtered, $course, $userId)
+                    ->inRandomOrder()
+                    ->take($count)
+                    ->get()
+            );
         }
 
-        $all = $course->questions();
-        $totalAll = $all->count();
-        $selected = $all->inRandomOrder()->take(min($count, $totalAll))->get();
+        return $this->applySeenFilter(clone $baseQuery, $course, $userId)
+            ->inRandomOrder()
+            ->take($count)
+            ->get();
+    }
 
-        return $selected;
+    private function applySeenFilter($query, Course $course, ?int $userId): mixed
+    {
+        if ($userId === null) {
+            return $query;
+        }
+
+        $answeredIds = QuizAnswer::whereIn(
+            'quiz_session_id',
+            QuizSession::where('user_id', $userId)
+                ->where('course_id', $course->id)
+                ->select('id')
+        )->pluck('question_id');
+
+        if ($answeredIds->isEmpty()) {
+            return $query;
+        }
+
+        $available = (clone $query)->whereNotIn('id', $answeredIds)->count();
+
+        if ($available === 0) {
+            $allIds = (clone $query)->pluck('id');
+            QuizAnswer::whereIn(
+                'quiz_session_id',
+                QuizSession::where('user_id', $userId)
+                    ->where('course_id', $course->id)
+                    ->select('id')
+            )->whereIn('question_id', $allIds)->delete();
+
+            return $query;
+        }
+
+        return $query->whereNotIn('id', $answeredIds);
     }
 
     private function interleaveByDifficulty(Collection $questions): Collection
