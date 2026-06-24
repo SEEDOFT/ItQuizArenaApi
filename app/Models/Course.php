@@ -16,9 +16,15 @@ class Course extends Model
 
     public const int PROGRAMMING = 1;
 
-    public const int NETWORKING = 1;
+    public const int NETWORKING = 2;
 
-    public const int DATABASE = 1;
+    public const int DATABASE = 3;
+
+    public const int BEGINNER_SCORE = 10;
+
+    public const int INTERMEDIATE_SCORE = 20;
+
+    public const int ADVANCED_SCORE = 30;
 
     protected function casts(): array
     {

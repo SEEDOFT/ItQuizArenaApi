@@ -15,11 +15,13 @@ class AchievementService
         $achievements = Achievement::all();
 
         foreach ($achievements as $achievement) {
-            $userAchievement = UserAchievement::where('user_id', $user->id)
-                ->where('achievement_id', $achievement->id)
-                ->first();
+            /** @var UserAchievement $userAchievement */
+            $userAchievement = UserAchievement::firstOrCreate(
+                ['user_id' => $user->id, 'achievement_id' => $achievement->id],
+                ['progress' => 0],
+            );
 
-            if (! $userAchievement || $userAchievement->is_unlocked) {
+            if ($userAchievement->is_unlocked) {
                 continue;
             }
 
