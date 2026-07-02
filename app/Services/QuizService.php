@@ -125,24 +125,29 @@ class QuizService
 
     public function endSession(QuizSession $session): QuizSession
     {
-        $session->status = 'completed';
+        $answeredCount = $session->answers()->count();
+        $isComplete = $answeredCount >= $session->total_questions;
+
+        $session->status = $isComplete ? 'completed' : 'abandoned';
         $session->save();
 
-        $user = $session->user;
+        if ($isComplete) {
+            $user = $session->user;
 
-        $user->increment('total_quizzes');
-        $user->increment('xp', $session->score);
+            $user->increment('total_quizzes');
+            $user->increment('xp', $session->score);
 
-        if ($session->score > $user->highest_score) {
-            $user->highest_score = $session->score;
+            if ($session->score > $user->highest_score) {
+                $user->highest_score = $session->score;
+            }
+
+            if ($session->highest_streak > $user->best_streak) {
+                $user->best_streak = $session->highest_streak;
+            }
+
+            $user->level = (int) floor($user->xp / 500) + 1;
+            $user->save();
         }
-
-        if ($session->highest_streak > $user->best_streak) {
-            $user->best_streak = $session->highest_streak;
-        }
-
-        $user->level = (int) floor($user->xp / 500) + 1;
-        $user->save();
 
         $session->load('course');
 

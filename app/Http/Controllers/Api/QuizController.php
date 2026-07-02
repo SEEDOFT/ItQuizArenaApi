@@ -127,15 +127,16 @@ class QuizController extends Controller
         $user->refresh();
         $newLevel = $user->level;
 
-        $newAchievements = $this->achievementService->checkUnlocks($user, $session);
+        $isComplete = $session->status === 'completed';
+        $newAchievements = $isComplete ? $this->achievementService->checkUnlocks($user, $session) : [];
 
         return $this->success([
             'session' => new QuizSessionResource($session->load('course')),
             'new_achievements' => $newAchievements,
-            'xp_gained' => $session->score,
+            'xp_gained' => $isComplete ? $session->score : 0,
             'level_up' => $newLevel > $oldLevel,
             'new_level' => $newLevel,
-        ], 'Quiz completed');
+        ], $isComplete ? 'Quiz completed' : 'Quiz abandoned');
     }
 
     public function show(Request $request, QuizSession $session): JsonResponse
